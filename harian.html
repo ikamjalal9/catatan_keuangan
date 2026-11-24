@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catatan Pengeluaran Uang</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f0f4f8;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        .form-keluaran {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #34495e;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #219653;
+        }
+
+        table {
+            width: 100%;
+            background: white;
+            border-collapse: collapse;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .total {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-top: 20px;
+            font-size: 22px;
+            font-weight: bold;
+            text-align: right;
+            color: #c0392b;
+        }
+
+        .hapus {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 14px;
+            width: auto;
+        }
+
+        .hapus:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>💰 Catatan Pengeluaran Uang</h1>
+
+    <!-- Form Input -->
+    <div class="form-keluaran">
+        <label for="tanggal">Tanggal:</label>
+        <input type="date" id="tanggal" required>
+
+        <label for="keterangan">Keterangan:</label>
+        <input type="text" id="keterangan" placeholder="Contoh: Beli Makan, Transportasi" required>
+
+        <label for="jumlah">Jumlah (Rp):</label>
+        <input type="number" id="jumlah" placeholder="0" min="0" required>
+
+        <button onclick="tambahPengeluaran()">➕ Tambah Pengeluaran</button>
+    </div>
+
+    <!-- Tabel Daftar Pengeluaran -->
+    <table id="tabel-keluaran">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Tanggal</th>
+                <th>Keterangan</th>
+                <th>Jumlah (Rp)</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data akan ditambahkan di sini -->
+        </tbody>
+    </table>
+
+    <!-- Total Pengeluaran -->
+    <div class="total">
+        Total Pengeluaran: <span id="total">Rp 0</span>
+    </div>
+
+    <script>
+        let nomor = 1;
+        let totalSemua = 0;
+
+        function tambahPengeluaran() {
+            // Ambil nilai dari input
+            const tanggal = document.getElementById('tanggal').value;
+            const keterangan = document.getElementById('keterangan').value;
+            const jumlah = parseInt(document.getElementById('jumlah').value);
+
+            // Validasi input
+            if (!tanggal || !keterangan || isNaN(jumlah)) {
+                alert('Harap isi semua kolom dengan benar!');
+                return;
+            }
+
+            // Ambil tabel dan tambahkan baris baru
+            const tabel = document.querySelector('#tabel-keluaran tbody');
+            const barisBaru = tabel.insertRow();
+
+            barisBaru.innerHTML = `
+                <td>${nomor++}</td>
+                <td>${tanggal}</td>
+                <td>${keterangan}</td>
+                <td>Rp ${jumlah.toLocaleString('id-ID')}</td>
+                <td><button class="hapus" onclick="hapusBaris(this, ${jumlah})">Hapus</button></td>
+            `;
+
+            // Tambahkan ke total
+            totalSemua += jumlah;
+            updateTotal();
+
+            // Kosongkan input
+            document.getElementById('tanggal').value = '';
+            document.getElementById('keterangan').value = '';
+            document.getElementById('jumlah').value = '';
+        }
+
+        function hapusBaris(button, jumlah) {
+            button.parentElement.parentElement.remove();
+            totalSemua -= jumlah;
+            updateTotal();
+        }
+
+        function updateTotal() {
+            document.getElementById('total').textContent = `Rp ${totalSemua.toLocaleString('id-ID')}`;
+        }
+    </script>
+    
+</body>
+</html
